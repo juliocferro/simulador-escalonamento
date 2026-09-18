@@ -1,0 +1,44 @@
+{
+  "nome": "Aula 6 - herança",
+  "parametros": {
+    "algoritmo": "PRIOp",
+    "quantum": 2,
+    "custo_troca": 0,
+    "protocolo": "heranca",
+    "envelhecimento": 0
+  },
+  "tarefas": [
+    {
+      "id": 1,
+      "ingresso": 0,
+      "tp": 6,
+      "prioridade": 1,
+      "uso_de_r": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 2,
+      "ingresso": 4,
+      "tp": 4,
+      "prioridade": 2
+    },
+    {
+      "id": 3,
+      "ingresso": 6,
+      "tp": 3,
+      "prioridade": 3
+    },
+    {
+      "id": 4,
+      "ingresso": 2,
+      "tp": 3,
+      "prioridade": 4,
+      "uso_de_r": [
+        1,
+        1
+      ]
+    }
+  ]
+}

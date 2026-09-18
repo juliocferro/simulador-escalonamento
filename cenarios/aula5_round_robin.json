@@ -1,0 +1,42 @@
+{
+  "nome": "Aula 5 - Round-Robin q=2",
+  "parametros": {
+    "algoritmo": "RR",
+    "quantum": 2,
+    "custo_troca": 0,
+    "protocolo": "nenhum",
+    "envelhecimento": 0
+  },
+  "tarefas": [
+    {
+      "id": 1,
+      "ingresso": 0,
+      "tp": 5,
+      "prioridade": 2
+    },
+    {
+      "id": 2,
+      "ingresso": 0,
+      "tp": 2,
+      "prioridade": 3
+    },
+    {
+      "id": 3,
+      "ingresso": 1,
+      "tp": 4,
+      "prioridade": 1
+    },
+    {
+      "id": 4,
+      "ingresso": 3,
+      "tp": 1,
+      "prioridade": 4
+    },
+    {
+      "id": 5,
+      "ingresso": 5,
+      "tp": 2,
+      "prioridade": 5
+    }
+  ]
+}

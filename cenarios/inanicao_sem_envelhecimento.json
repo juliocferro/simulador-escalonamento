@@ -1,0 +1,48 @@
+{
+  "nome": "Inanição - sem envelhecimento",
+  "parametros": {
+    "algoritmo": "PRIOc",
+    "quantum": 2,
+    "custo_troca": 0,
+    "protocolo": "nenhum",
+    "envelhecimento": 0
+  },
+  "tarefas": [
+    {
+      "id": 1,
+      "ingresso": 0,
+      "tp": 4,
+      "prioridade": 1
+    },
+    {
+      "id": 2,
+      "ingresso": 0,
+      "tp": 2,
+      "prioridade": 5
+    },
+    {
+      "id": 3,
+      "ingresso": 2,
+      "tp": 2,
+      "prioridade": 5
+    },
+    {
+      "id": 4,
+      "ingresso": 4,
+      "tp": 2,
+      "prioridade": 5
+    },
+    {
+      "id": 5,
+      "ingresso": 6,
+      "tp": 2,
+      "prioridade": 5
+    },
+    {
+      "id": 6,
+      "ingresso": 8,
+      "tp": 2,
+      "prioridade": 5
+    }
+  ]
+}

@@ -48,3 +48,7 @@ saida/
 *.toc
 *.fls
 *.fdb_latexmk
+
+# Saida intermediaria do PyInstaller. O Simulador.exe e copiado para a raiz
+# do repositorio e versionado normalmente; so a pasta dist/ e ignorada.
+dist/

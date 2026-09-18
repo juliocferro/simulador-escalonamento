@@ -1,0 +1,38 @@
+{
+  "nome": "Teto sem disputa",
+  "parametros": {
+    "algoritmo": "PRIOp",
+    "quantum": 2,
+    "custo_troca": 0,
+    "protocolo": "teto",
+    "envelhecimento": 0
+  },
+  "tarefas": [
+    {
+      "id": 1,
+      "ingresso": 0,
+      "tp": 6,
+      "prioridade": 1,
+      "uso_de_r": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 2,
+      "ingresso": 2,
+      "tp": 3,
+      "prioridade": 2
+    },
+    {
+      "id": 4,
+      "ingresso": 12,
+      "tp": 2,
+      "prioridade": 4,
+      "uso_de_r": [
+        0,
+        1
+      ]
+    }
+  ]
+}

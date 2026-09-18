@@ -1,0 +1,58 @@
+# Gera o Simulador.exe no Windows com o PyInstaller e o grava na raiz do
+# repositório. Roda a cada push na main do fork e também sob demanda, pela
+# aba Actions. O executável gerado fica disponível como artefato da execução
+# e é enviado de volta ao repositório em um commit próprio.
+
+name: Gerar executável
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "Simulador.exe"
+      - "docs/**"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar o PyInstaller
+        run: pip install pyinstaller
+
+      - name: Executar os testes de referência
+        run: python -m unittest discover -s testes -v
+
+      - name: Gerar o executável
+        run: pyinstaller --onefile --windowed --name Simulador --clean --noconfirm main.py
+
+      - name: Copiar para a raiz
+        run: Copy-Item dist\Simulador.exe Simulador.exe -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Simulador.exe
+          path: Simulador.exe
+
+      - name: Enviar o executável ao repositório
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Simulador.exe
+          if git diff --cached --quiet; then
+            echo "Simulador.exe sem alteracoes."
+          else
+            git commit -m "gera Simulador.exe com PyInstaller [skip ci]"
+            git push
+          fi

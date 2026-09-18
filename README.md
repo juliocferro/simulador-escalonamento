@@ -1,118 +1,114 @@
-# Simulador de Escalonamento de Tarefas
+# Simulador de Escalonamento de Tarefas — Grupo 4
 
-Projeto prático da disciplina de **Sistemas Operacionais**.
+Projeto prático da disciplina de **Sistemas Operacionais**, 8º semestre do curso de Engenharia da Computação da Faculdade Engenheiro Salvador Arena, ministrada pelo Prof. Vinícius S. Borges. Semestre 2026/2.
 
-O trabalho consiste em desenvolver um simulador de escalonamento de tarefas em
-um processador, capaz de reproduzir os algoritmos vistos em sala e o fenômeno
-da inversão de prioridades, com seus mecanismos de correção.
+## Integrantes
 
-O simulador implementa seis algoritmos:
+| Nome | RA | GitHub |
+|---|---|---|
+| Felipe de Carvalho Medeiros | 081230026 | [FelipeMedeiros068](https://github.com/FelipeMedeiros068) |
+| Júlio César Caberlino Ferro | 081230003 | [juliocferro](https://github.com/juliocferro) |
+| Matheus Mitsuo Sato Silva | 081230046 | — |
+| Nicolas Gomes Lima | 081230048 | [nicolas-optio](https://github.com/nicolas-optio) |
 
-- **FCFS** — First-Come, First-Served
-- **SJF** — Shortest Job First
-- **SRTF** — Shortest Remaining Time First
-- **RR** — Round-Robin
-- **PRIOc** — Prioridade cooperativa
-- **PRIOp** — Prioridade preemptiva
+## Como executar
 
-E os mecanismos de tratamento de recursos de uso exclusivo: **inversão de
-prioridades**, **herança de prioridade**, **teto de prioridade** e
-**envelhecimento**.
+Clique duas vezes em **`Simulador.exe`**.
 
-## Documentos do projeto
+Não é necessário instalar nada. O programa abre já com o cenário da Aula 5 carregado; clique em **Simular** para ver o primeiro resultado.
 
-Leia os dois antes de começar.
+Quem tiver Python 3.10 ou superior instalado pode, em vez disso, dar dois cliques em `Simulador.pyw` (sem console) ou executar `python main.py`. Nenhuma biblioteca externa é necessária: o programa usa apenas a biblioteca padrão, incluindo o `tkinter`.
 
-- [📄 Enunciado](./documentos/01_enunciado.pdf) — o que o simulador precisa
-  fazer: os dez requisitos e os cenários de referência
-- [📘 Guia de documentação](./documentos/02_guia_documentacao.pdf) — o que
-  escrever no README, nos tutoriais e na documentação técnica
+## Descrição
 
-O enunciado descreve *o que fazer*; o guia de documentação descreve *como
-organizar a entrega*.
+O simulador reproduz, em tempo discreto, o escalonamento de um conjunto de tarefas em um processador. Implementa os seis algoritmos estudados em aula (FCFS, SJF, SRTF, Round-Robin e prioridade cooperativa e preemptiva), cobra o custo da troca de contexto, calcula as métricas por tarefa e em média (tempo de execução, tempo de processamento, tempo de espera e tempo até a primeira execução) e desenha o diagrama de tempo no formato usado em sala, com uma linha por tarefa.
 
-## Organização deste repositório
+Uma tarefa pode declarar uma seção crítica sobre o recurso de uso exclusivo R. Com isso o simulador reproduz a inversão de prioridades, distingue bloqueio direto de inversão, e aplica os dois protocolos de correção, herança e teto de prioridade, além do envelhecimento para eliminar a inanição. Um gerador sorteia conjuntos de tarefas, para observação individual ou para comparar os seis algoritmos sobre um lote, e qualquer cenário pode ser gravado em JSON e recarregado depois. O código separa o mecanismo (o laço de simulação, único) da política (cada algoritmo em poucas linhas).
 
-A branch `main` guarda apenas os documentos do projeto e **nunca recebe
-entregas**. Cada grupo tem uma **branch dedicada**, onde a entrega aprovada é
-incorporada.
-
-### Estado inicial
+## Estrutura do repositório
 
 ```
 simulador-escalonamento/
-└── main
-    ├── README.md
-    ├── .gitignore
-    └── documentos/
+├── README.md                    este arquivo
+├── Simulador.exe                programa pronto: abre com dois cliques
+├── Simulador.pyw                mesmo programa, para quem tem Python (dois cliques, sem console)
+├── main.py                      ponto de entrada do código-fonte
+├── gerar_executavel.bat         gera o Simulador.exe em uma máquina Windows
+├── simulador/                   código-fonte do simulador
+├── cenarios/                    cenários de referência gravados em JSON
+├── testes/                      testes que reproduzem os cenários de validação do enunciado
+├── docs/                        tutoriais e documentação técnica (PDF e Markdown)
+│   └── imagens/                 capturas de tela e diagrama de módulos
+├── documentos/                  enunciado e guias distribuídos pelo professor
+└── .github/workflows/           geração automática do executável no GitHub Actions
 ```
 
-### Ao longo do semestre
+## Arquivos de código
 
-```
-simulador-escalonamento/
-├── main       Documentos do projeto (não muda)
-├── grupo1     Entrega do grupo 1
-├── grupo2     Entrega do grupo 2
-├── ...
-└── grupo8     Entrega do grupo 8
-```
+- `main.py` — ponto de entrada; abre a janela do programa.
+- `Simulador.pyw` — mesmo ponto de entrada, associado ao `pythonw` no Windows para abrir sem console.
+- `simulador/modelo.py` — estrutura de uma tarefa (`Tarefa`), dos parâmetros do escalonador (`Parametros`) e de um cenário (`Cenario`); validação das faixas de entrada; gravação e leitura em JSON.
+- `simulador/politicas.py` — os seis algoritmos de escalonamento (a política): cada um é uma classe pequena com o método `escolher(prontas, contexto)`.
+- `simulador/motor.py` — laço de simulação (o mecanismo): relógio, conjunto de prontas, troca de contexto, recurso R com suspensão, herança, teto, envelhecimento e o `Resultado` com segmentos e eventos.
+- `simulador/metricas.py` — cálculo de tt, tp, tw, tempo até a primeira execução, médias, trocas e eficiência.
+- `simulador/gerador.py` — sorteio de conjuntos de tarefas e comparação dos seis algoritmos em lote.
+- `simulador/exemplos.py` — cenários de referência do enunciado, oferecidos pelo botão **Exemplos**.
+- `simulador/interface.py` — janela do programa em tkinter: tabela de tarefas, parâmetros, métricas, diagrama de tempo, eventos e comparação em lote.
+- `testes/test_referencia.py` — reprodução automática dos cenários de validação do enunciado (`python -m unittest discover -s testes -v`).
 
-**Como navegar entre as entregas:** clique no seletor de branches, no canto
-superior esquerdo, onde aparece `main`, e escolha a branch do grupo desejado.
+## Funcionalidades
 
-## Como entregar
+| O que faz | Requisito | Onde |
+|---|---|---|
+| Os seis algoritmos (FCFS, SJF, SRTF, RR, PRIOc, PRIOp) | R1 | `simulador/politicas.py` |
+| Entrada de tarefas digitada, com recusa de valores inválidos | R2 | `simulador/interface.py`, `simulador/modelo.py` |
+| Gravar e recarregar um cenário (JSON) | R2 | `simulador/modelo.py`, `simulador/interface.py` |
+| Métricas por tarefa e em média: tt, tp, tw, 1ª execução | R3 | `simulador/metricas.py` |
+| Quantum, custo da troca e eficiência tq/(tq+ttc); recusa de tq ≤ ttc | R4 | `simulador/motor.py`, `simulador/metricas.py`, `simulador/modelo.py` |
+| Recurso exclusivo R, suspensão, bloqueio direto e inversão | R5 | `simulador/motor.py` |
+| Herança de prioridade | R6 | `simulador/motor.py` |
+| Teto de prioridade | R7 | `simulador/motor.py` |
+| Envelhecimento com passo α | R8 | `simulador/motor.py` |
+| Sorteio de cenários e comparação em lote | R9 | `simulador/gerador.py` |
+| Diagrama de tempo, uma linha por tarefa | R9 | `simulador/interface.py` |
+| Programa que abre com dois cliques, sem argumentos | R10 | `Simulador.exe`, `Simulador.pyw`, `main.py` |
+| Cenários de referência prontos para carregar | — | `simulador/exemplos.py`, `cenarios/` |
 
-A entrega é feita por **fork + pull request**, conforme o guia de entrega
-distribuído em aula:
+## Requisitos de ambiente
 
-1. **Fazer o fork** deste repositório (botão `Fork`, no canto superior direito)
-2. **Clonar o fork** na máquina de um dos integrantes
-3. **Desenvolver o trabalho** no fork
-4. **Fazer commit e push** a cada avanço, ao longo de todo o desenvolvimento, e
-   não apenas no final. O commit registra a alteração no seu computador; só o
-   push a envia para o fork, que é o que o GitHub enxerga
-5. **Abrir um pull request para a branch do seu grupo**, com o título no
-   formato:
+- `Simulador.exe`: Windows 10 ou 11, 64 bits. Nada a instalar.
+- Código-fonte: Python 3.10 ou superior com `tkinter` (incluído no instalador oficial do Python). Nenhuma biblioteca externa.
+- Geração do executável: PyInstaller, no Windows (`gerar_executavel.bat`) ou pelo GitHub Actions (`.github/workflows/gerar_executavel.yml`).
 
-```
-Entrega - Grupo XX - Nome dos integrantes
-```
+## Documentação
 
-> **O erro mais comum:** o GitHub oferece `main` como destino por padrão. A
-> `main` é protegida e não recebe entregas, então um pull request apontado para
-> ela é devolvido sem análise. Troque o campo `base` para a branch do seu grupo
-> **antes** de criar o pull request.
+- [Tutorial de execução](./docs/tutorial_execucao.pdf) — pré-requisitos, qual arquivo abrir, primeira tela, execução mínima e resultado esperado.
+- [Tutorial de uso](./docs/tutorial_uso.pdf) — cada função do programa, passo a passo, com capturas de tela e um resultado conhecido para conferência.
+- [Documentação técnica](./docs/documentacao_projeto.pdf) — separação entre política e mecanismo, diagrama de módulos, estrutura de uma tarefa, interface dos módulos, parâmetros, funcionamento interno e convenções de simulação.
 
-## Estrutura esperada dentro do fork
+Os três documentos também estão em Markdown na pasta `docs/`.
 
-```
-simulador-escalonamento/
-├── README.md              como executar, integrantes, funcionalidades
-├── Simulador.exe          o arquivo que abre com dois cliques
-├── main.py                ponto de entrada do código-fonte
-├── simulador/             código-fonte
-├── cenarios/              conjuntos de tarefas gravados
-└── docs/                  tutoriais e documentação técnica
-```
+## Por onde começar
 
-Há um modelo de README de grupo em
-[`documentos/modelo_readme_do_grupo.md`](./documentos/modelo_readme_do_grupo.md).
-Detalhes do conteúdo no
-[guia de documentação](./documentos/02_guia_documentacao.pdf).
+1. Abra o programa e siga o [tutorial de execução](./docs/tutorial_execucao.pdf).
+2. Reproduza um cenário de exemplo pelo [tutorial de uso](./docs/tutorial_uso.pdf).
+3. Consulte a [documentação técnica](./docs/documentacao_projeto.pdf) para entender o código.
 
-## Entregas dos grupos
+## Cenários de referência
 
-Entregas aprovadas e incorporadas ao repositório:
+Valores obtidos pelo simulador no cenário da Aula 5, com custo de troca nulo:
 
-<!-- Adicionar conforme os pull requests forem aceitos:
-- [Grupo 1](../../tree/grupo1) — Nomes dos integrantes
--->
+| Algoritmo | Tt | Tw | 1ª exec. | Trocas |
+|---|---|---|---|---|
+| FCFS | 8,0 | 5,2 | 5,2 | 5 |
+| RR (q = 2) | 8,4 | 5,6 | 2,8 | 8 |
+| SJF | 5,8 | 3,0 | 3,0 | 5 |
+| SRTF | 5,4 | 2,6 | 2,4 | 6 |
+| PRIOc | 6,6 | 3,8 | 3,8 | 5 |
+| PRIOp | 5,6 | 2,8 | 2,2 | 7 |
 
-*Nenhuma entrega aprovada até o momento.*
+Com custo de troca 1: FCFS Tt = 11,0 e Tw = 8,2; RR (q = 4) Tt = 13,4, Tw = 10,6 e E = 0,800. Aula 6: inversão Tt = 9,75 e Tw = 5,75; herança e teto Tt = 9,50 e Tw = 5,50. Todos são verificados por `testes/test_referencia.py`.
 
-## Observações
+## Uso de assistentes de programação
 
-- O projeto precisa **abrir com dois cliques**, sem montagem de ambiente
-- Não há relatório escrito: a análise dos resultados é feita oralmente
-- Dúvidas: abrir uma **Issue** neste repositório
+<!-- Preencher: declarar se foram usados e em quais partes. -->

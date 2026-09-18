@@ -111,4 +111,4 @@ Com custo de troca 1: FCFS Tt = 11,0 e Tw = 8,2; RR (q = 4) Tt = 13,4, Tw = 10,6
 
 ## Uso de assistentes de programação
 
-<!-- Preencher: declarar se foram usados e em quais partes. -->
+Utilização de Claude AI, da Anthropic para auxílio à programação do trabalho e para garantir o uso correto do GitHub ao realizar a entrega do trabalho.
